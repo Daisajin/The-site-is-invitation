@@ -357,7 +357,6 @@
         <section id="section1">
             <div class="section-content">
                 <header class="invitation-header">
-                    <!-- Обновлённый путь к изображению -->
                     <img src="asset/media/images/2025-04-10_09-59-54_5413.png" alt="Декоративное изображение для приглашения" class="mascot-image">
                     <h1 class="text-4xl mb-6">Дорогие мои друзья и близкие!</h1>
                 </header>
@@ -388,9 +387,9 @@
                 <p class="text-xl mb-4">Ресторан "Новая Высота"</p>
                 <p class="mb-4">г. Барнаул, Социалистический проспект, 116</p>
                 <div class="map-container">
-                    <!-- Карта Яндекс вместо 2ГИС -->
+                    <!-- Обновлённая карта Яндекс -->
                     <iframe 
-                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A79.327806%2C53.347556&z=16&ll=79.327806%2C53.347556" 
+                        src="https://yandex.ru/map-widget/v1/?ll=83.774856%2C53.347556&z=16&mode=search&text=Социалистический%20проспект%20116%2C%20Барнаул" 
                         width="100%" 
                         height="300" 
                         frameborder="0" 
@@ -425,21 +424,20 @@
                         <p>Золотой</p>
                     </div>
                     <div class="dress-code-option" tabindex="0">
-                        <div class="color-sample" style="background: #F5F5D5"></div> <!-- Обновлённый бежевый -->
+                        <div class="color-sample" style="background: #F5F5D5"></div>
                         <p>Бежевый</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Подтверждение -->
+        <!-- Подтверждение (без email) -->
         <section id="section5">
             <div class="section-content">
                 <h2 class="text-3xl mb-6">Подтверждение присутствия</h2>
                 <form class="rsvp-form" id="rsvpForm" novalidate>
                     <input type="text" placeholder="Ваше имя" required aria-label="Ваше имя">
                     <input type="tel" placeholder="Телефон" required pattern="[0-9]{10,}" aria-label="Ваш номер телефона">
-                    <input type="email" placeholder="Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" aria-label="Ваш email">
                     <textarea placeholder="Ваши пожелания или комментарии" rows="4" aria-label="Ваши пожелания или комментарии"></textarea>
                     <button type="submit">Подтвердить присутствие</button>
                 </form>
@@ -476,10 +474,10 @@
                 e.preventDefault();
                 const formData = new FormData(form);
 
-                const email = form.querySelector('input[type="email"]').value;
+                // Валидация только телефона
                 const phone = form.querySelector('input[type="tel"]').value;
-                if (!email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/) || !phone.match(/[0-9]{10,}/)) {
-                    alert('Пожалуйста, введите корректный email и телефон.');
+                if (!phone.match(/[0-9]{10,}/)) {
+                    alert('Пожалуйста, введите корректный номер телефона.');
                     return;
                 }
 
