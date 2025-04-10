@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню ресторана "Высота"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes writing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #5a3e36;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: #f9f0e9;
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #menu {
+            background: linear-gradient(135deg, #f2e4d8 0%, #ebd8c9 100%);
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #8c5e58;
+        }
+        
+        .writing-animation {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #8c5e58;
+            animation: writing 3s steps(40) 1s 1 normal both;
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .menu-category {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .menu-item {
+            border-bottom: 1px dashed #d9c7b8;
+            padding: 0.8rem 0;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .price {
+            float: right;
+            font-weight: 600;
+            color: #8c5e58;
+        }
+        
+        .description {
+            font-size: 0.9em;
+            color: #7a6e66;
+            margin-top: 0.3rem;
+        }
+        
+        .floral-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem 0;
+            color: #8c5e58;
+        }
+        
+        .floral-divider::before, .floral-divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #d9c7b8;
+            margin: 0 1rem;
+        }
+        
+        .nav-dots {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d9c7b8;
+            margin: 0.8rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background: #8c5e58;
+            transform: scale(1.3);
+        }
+        
+        /* Accordion styles */
+        .accordion {
+            margin-bottom: 1rem;
+        }
+        
+        .accordion-header {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .accordion-content-inner {
+            padding: 1rem;
+        }
+        
+        .accordion.active .accordion-content {
+            max-height: 1000px;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Order selection styles */
+        .order-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #d9c7b8;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #8c5e58;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            margin: 0 0.5rem;
+            border: 1px solid #d9c7b8;
+            border-radius: 4px;
+            padding: 0.2rem;
+        }
+        
+        .add-to-cart {
+            background: #8c5e58;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .add-to-cart:hover {
+            background: #7a4f4a;
+        }
+        
+        /* Schnauzer cart styles */
+        .cart-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+        
+        .cart-btn {
+            background: #8c5e58;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        
+        .cart-dropdown {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 1rem;
+            display: none;
+        }
+        
+        .cart-dropdown.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .cart-total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .checkout-btn {
+            background: #8c5e58;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .schnauzer-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-dots">
+        <div class="nav-dot active" data-section="menu"></div>
+    </div>
+
+    <section id="menu" class="section">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-10">
+                <div class="floating-icon text-5xl text-amber-800 mb-4">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold">
+                    <span class="writing-animation">Меню ресторана "Высота"</span>
+                </h1>
+                <div class="floral-divider">
+                    <i class="fas fa-leaf mx-2"></i>
+                    <i class="fas fa-leaf mx-2"></i>
+                    <i class="fas fa-leaf mx-2"></i>
+                </div>
+            </div>
+            
+            <!-- Cart Container -->
+            <div class="cart-container">
+                <div class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="cart-count">0</div>
+                </div>
+                <div class="cart-dropdown">
+                    <div class="cart-items"></div>
+                    <div class="cart-total">Итого: 0 ₽</div>
+                    <button class="checkout-btn">Оформить заказ</button>
+                </div>
+            </div>
+
+            <!-- Икорное меню -->
+            <div class="accordion active">
+                <div class="accordion-header">
+                    <h3>Икорное меню</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Бутерброды с чёрной икрой (6 шт)</span>
+                                    <div class="description">На свежем багете с маслом</div>
+                                </div>
+                                <span class="price">990 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Бутерброды с красной икрой (6 шт)</span>
+                                    <div class="description">На свежем багете с маслом</div>
+                                </div>
+                                <span class="price">580 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Икра чёрная осетровая (52 г)</span>
+                                    <div class="description">Подаётся с тостами и лимоном</div>
+                                </div>
+                                <span class="price">2000 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Икра красная лососёвая (30 г)</span>
+                                    <div class="description">Подаётся с тостами и лимоном</div>
+                                </div>
+                                <span class="price">550 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Аквариум -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Аквариум</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Устрица императорская (за 100 г)</span>
+                                    <div class="description">Подаются с лимоном и соусом</div>
+                                </div>
+                                <span class="price">570 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Устрица хасанская (за 100 г)</span>
+                                    <div class="description">Подаются с лимоном и соусом</div>
+                                </div>
+                                <span class="price">370 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Дюжина устриц</span>
+                                    <div class="description">Ассорти из императорских и хасанских устриц</div>
+                                </div>
+                                <span class="price">3950 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>1/2 дюжины устриц</span>
+                                    <div class="description">Ассорти из императорских и хасанских устриц</div>
+                                </div>
+                                <span class="price">2500 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Холодные закуски -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Холодные закуски</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Сёмга шеф посола (100/130 г)</span>
+                                    <div class="description">сёмга, яйцо, творожный сыр, микс салата, каперсы, красный лук</div>
+                                </div>
+                                <span class="price">1150 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Строганина из муксуна (100/75/40 г)</span>
+                                    <div class="description">свежемолотый перец с солью, репчатый лук с уксусом, брусника тёртая</div>
+                                </div>
+                                <span class="price">690 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Мясная тарелка (1760/70/30 г)</span>
+                                    <div class="description">пастрами из утки и говядины, язык говяжий, копчёная свиная шея с огурцами фирменного посола, томатами черри и горчицей</div>
+                                </div>
+                                <span class="price">980 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Ростбиф с томатами и крымским луком (100/150 г)</span>
+                                </div>
+                                <span class="price">970 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Маринованные брюшки лосося (200 г)</span>
+                                    <div class="description">с маринованным луком, кинзой, нори, соусом кимчи, перцем чили</div>
+                                </div>
+                                <span class="price">350 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Грузди солёные (100/20/50 г)</span>
+                                    <div class="description">сметаной и зеленью</div>
+                                </div>
+                                <span class="price">480 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Оливки маринованные (150 г)</span>
+                                </div>
+                                <span class="price">450 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Сырная тарелка с медовыми сотами, ягодным мармеладом и орехом пекан (120/90 г)</span>
+                                </div>
+                                <span class="price">980 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Камамбер (25 г)</span>
+                                </div>
+                                <span class="price">190 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Горгонзолла (25 г)</span>
+                                </div>
+                                <span class="price">230 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Пармезан (25 г)</span>
+                                </div>
+                                <span class="price">220 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Красная ведьма (25 г)</span>
+                                </div>
+                                <span class="price">230 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Фруктовая тарелка с сезонными фруктами и ягодами (200/400 г)</span>
+                                </div>
+                                <span class="price">560/950 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Тунец холодного копчения (80/40 г)</span>
+                                </div>
+                                <span class="price">490 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Сельдь с картофелем и луком (300 г)</span>
+                                </div>
+                                <span class="price">490 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Джерки курица (50 г)</span>
+                                </div>
+                                <span class="price">320 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Джерки говядина (50 г)</span>
+                                </div>
+                                <span class="price">390 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Салаты -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Салаты</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Мексиканский овощной салат с авокадо (240 г)</span>
+                                    <div class="description">томатами черри, кукурузой, капустой белокочанной, кешью, кинзой и соусом сальса верде</div>
+                                </div>
+                                <span class="price">660 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Цезарь с цыплёнком (235 г)</span>
+                                </div>
+                                <span class="price">550 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Греческий (300 г)</span>
+                                </div>
+                                <span class="price">680 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Хрустящий баклажан с манго, томатами, страчателлой и соусом унаги (255 г)</span>
+                                </div>
+                                <span class="price">620 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Утиное пастрами с зелёным салатом, клубникой, апельсином и соусом винегрет (200 г)</span>
+                                </div>
+                                <span class="price">590 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Цезарь с тигровыми креветками (255 г)</span>
+                                </div>
+                                <span class="price">660 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Цезарь с сёмгой шеф посола (235 г)</span>
+                                </div>
+                                <span class="price">840 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Тунец подкопчённый с рукколой (250 г)</span>
+                                    <div class="description">красной икрой, хрустящим картофелем, стручковой фасолью и горчичным соусом</div>
+                                </div>
+                                <span class="price">780 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Стейк салат из мраморной говядины (230 г)</span>
+                                    <div class="description">с томатами, шампиньонами, зеленью и пряным соусом</div>
+                                </div>
+                                <span class="price">780 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Нисуаз с тунцом (270 г)</span>
+                                </div>
+                                <span class="price">860 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Тигровые креветки гриль с манго, авокадо, салатным миксом, сливочным сыром, маракуйей и соусом винегрет (220 г)</span>
+                                </div>
+                                <span class="price">840 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Авокадо с камчатским крабом (230 г)</span>
+                                    <div class="description">томатами и соусом бонито</div>
+                                </div>
+                                <span class="price">1160 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Брускетты -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Брускетты</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Сёмга с авокадо (170 г)</span>
+                                    <div class="description">и лимонно-горчичным соусом</div>
+                                </div>
+                                <span class="price">670 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Ростбиф с соусом айоли (160 г)</span>
+                                    <div class="description">и вялеными томатами</div>
+                                </div>
+                                <span class="price">660 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Страчателла с печёным баклажаном, орехом пекан и соусом унаги (210 г)</span>
+                                </div>
+                                <span class="price">560 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Паштет из куриной печени на французском багете с клубникой (150 г)</span>
+                                </div>
+                                <span class="price">450 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0 min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Горячие закуски -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Горячие закуски</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Тигровые креветки в кляре с тайским соусом (130/30 г)</span>
+                                </div>
+                                <span class="price">490 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Камамбер запечённый со свежей клубникой, мёдом, малиной и грецким орехом (140/24 г)</span>
+                                </div>
+                                <span class="price">430/790 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Гренки к пиву (250/50 г)</span>
+                                </div>
+                                <span class="price">590 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Наггетсы на выбор острые/неострые (120/50 г)</span>
+                                </div>
+                                <span class="price">390 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Баклажаны гриль (500 г)</span>
+                                    <div class="description">с рассольной моцареллой, томатами и пряным унаги</div>
+                                </div>
+                                <span class="price">645 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Бургер «Высота» (340 г)</span>
+                                    <div class="description">картофельная булочка, мраморная говядина, чеддер, томаты, салат айсберг, кетчуп, соус для бургера. Подается с картофелем фри и соусом (120/30 г)</div>
+                                </div>
+                                <span class="price">790 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Бургер с засахаренным беконом (170 г)</span>
+                                    <div class="description">сыром чеддер и томатным джемом</div>
+                                </div>
+                                <span class="price">450 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Фирменный сандвич (270 г)</span>
+                                    <div class="description">мраморная говядина, тосты, чеддер, лук, бургер соус</div>
+                                </div>
+                                <span class="price">680 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Супы -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Супы</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Борщ с говядиной и копчёным салом (320/30/350/30 г)</span>
+                                </div>
+                                <span class="price">550 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Яичная лапша с цыплёнком и гренками (350/20 г)</span>
+                                </div>
+                                <span class="price">595 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Крем-суп из белых грибов, шампиньонов, сливок с гренками (250/20 г)</span>
+                                </div>
+                                <span class="price">480 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Том ям с креветками (350/70 г)</span>
+                                </div>
+                                <span class="price">790 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Сырный суп с беконом и гренками (250/20 г)</span>
+                                </div>
+                                <span class="price">450 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Уха из камчатского краба и горной форели (450 г)</span>
+                                </div>
+                                <span class="price">1160 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Паста -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Паста</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Карбонара (350 г)</span>
+                                </div>
+                                <span class="price">660 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Пенне с цыплёнком, цукини, вялеными томатами и сливочно-базиликовым соусом (350 г)</span>
+                                </div>
+                                <span class="price">850 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Тальятелле с морепродуктами (550 г)</span>
+                                    <div class="description">в сливочном соусе</div>
+                                </div>
+                                <span class="price">780 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Спагетти с тигровыми креветками и томатами черри (355 г)</span>
+                                </div>
+                                <span class="price">780 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Горячие блюда -->
+            <div class="accordion">
+                <div class="accordion-header">
+                    <h3>Горячие блюда</h3>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Утиная ножка с парижской морковью (350 г)</span>
+                                    <div class="description">апельсиново-морковным соусом и морковным кремом</div>
+                                </div>
+                                <span class="price">850 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Палтус с картофельным пюре (240 г)</span>
+                                    <div class="description">ароматным маслом и яйцом пашот</div>
+                                </div>
+                                <span class="price">1160 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Гребешки с сельдереем и белыми грибами (250 г)</span>
+                                </div>
+                                <span class="price">620 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Хрустящий кальмар с овощами и соусом сладкий кимчи (265 г)</span>
+                                </div>
+                                <span class="price">940 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Поке с гребешком, тунцом, сёмгой (320 г)</span>
+                                    <div class="description">киноа, цукини, болгарским перцем, морковью, пряным унаги, базиликом</div>
+                                </div>
+                                <span class="price">890 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Бефстроганов с картофельным пюре (265 г)</span>
+                                </div>
+                                <span class="price">790 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Утиная грудка с апельсиновым соусом и свежими ягодами (205 г)</span>
+                                </div>
+                                <span class="price">890 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Медальоны из говяжьей вырезки (260 г)</span>
+                                    <div class="description">с картофельно-сырным кремом, шампиньонами и перечным соусом</div>
+                                </div>
+                                <span class="price">1150 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Запечённый кролик с молодыми корнеплодами и сыром раклет (500 г)</span>
+                                </div>
+                                <span class="price">590 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Томлёная баранина с картофелем конфи, томатами черри и соусом демиглас (350 г)</span>
+                                </div>
+                                <span class="price">790 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Запечённая куриная грудка с кремом из печёной моркови и соусом из белых грибов (350 г)</span>
+                                </div>
+                                <span class="price">760 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Томлёные телячьи щечки с пюре из сельдерея и густым мясным соусом (340 г)</span>
+                                </div>
+                                <span class="price">590 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Пельмени из марала (250/80 г)</span>
+                                    <div class="description">с грибным соусом</div>
+                                </div>
+                                <span class="price">460 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Пельмени из свинины и говядины (320/30 г)</span>
+                                    <div class="description">с беконом, белыми грибами и сметаной</div>
+                                </div>
+                                <span class="price">1650 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span>Жареный картофель с белыми грибами (300 г)</span>
+                                </div>
+                                <span class="price">890 ₽</span>
+                            </div>
+                            <div class="order-controls">
+                                <div class="quantity-selector">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="number" value="0" min="0" class="quantity-input">
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
+                                <button class="add-to-cart">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Cart functionality
+        const cart = {
+            items: [],
+            total: 0,
+            
+            addItem(item) {
+                const existingItem = this.items.find(i => i.name === item.name);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                } else {
+                    this.items.push(item);
+                }
+                this.updateCart();
+            },
+            
+            removeItem(itemName) {
+                this.items = this.items.filter(item => item.name !== itemName);
+                this.updateCart();
+            },
+            
+            updateCart() {
+                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                this.updateCartUI();
+            },
+            
+            updateCartUI() {
+                const cartItems = document.querySelector('.cart-items');
+                const cartTotal = document.querySelector('.cart-total');
+                const cartCount = document.querySelector('.cart-count');
+                
+                cartItems.innerHTML = this.items.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>${item.price * item.quantity} ₽</span>
+                        <button onclick="cart.removeItem('${item.name}')" class="remove-item">×</button>
+                    </div>
+                `).join('');
+                
+                cartTotal.textContent = `Итого: ${this.total} ₽`;
+                cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        };
+
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const accordion = header.parentElement;
+                accordion.classList.toggle('active');
+            });
+        });
+
+        // Cart button functionality
+        document.querySelector('.cart-btn').addEventListener('click', () => {
+            document.querySelector('.cart-dropdown').classList.toggle('active');
+        });
+
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                const menuItem = button.closest('.menu-item');
+                const name = menuItem.querySelector('span').textContent;
+                const price = parseInt(menuItem.querySelector('.price').textContent);
+                const quantity = parseInt(menuItem.querySelector('.quantity-input').value);
+                
+                if (quantity > 0) {
+                    cart.addItem({ name, price, quantity });
+                    menuItem.querySelector('.quantity-input').value = 0;
+                }
+            });
+        });
+
+        // Quantity controls
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = button.parentElement.querySelector('.quantity-input');
+                const currentValue = parseInt(input.value);
+                
+                if (button.classList.contains('minus')) {
+                    input.value = Math.max(0, currentValue - 1);
+                } else {
+                    input.value = currentValue + 1;
+                }
+            });
+        });
+
+        // Checkout functionality
+        document.querySelector('.checkout-btn').addEventListener('click', () => {
+            if (cart.items.length === 0) {
+                alert('Корзина пуста');
+                return;
+            }
+            
+            const order = {
+                items: cart.items,
+                total: cart.total,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Here you would typically send the order to your backend
+            console.log('Order:', order);
+            alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
+            
+            // Clear cart
+            cart.items = [];
+            cart.updateCart();
+        });
+
+        // Close cart dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.cart-container')) {
+                document.querySelector('.cart-dropdown').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
