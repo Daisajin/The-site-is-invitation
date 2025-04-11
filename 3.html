@@ -1824,49 +1824,57 @@
 
         // Checkout functionality
         document.querySelector('.checkout-btn').addEventListener('click', () => {
-            if (cart.items.length === 0) {
-                alert('Корзина пуста');
-                return;
-            }
-            
-            const order = {
-                items: cart.items,
-                total: cart.total
-            };
-            
-            const formData = new FormData();
-            formData.append('items', JSON.stringify(cart.items));
-            formData.append('total', cart.total.toString());
-            const urlEncodedData = new URLSearchParams(formData).toString();
+    if (cart.items.length === 0) {
+        alert('Корзина пуста');
+        return;
+    }
+    
+    const order = {
+        items: cart.items,
+        total: cart.total
+    };
+    console.log('Отправляемый заказ:', order);
+    
+    const formData = new FormData();
+    const itemsString = JSON.stringify(cart.items);
+    console.log('items перед кодированием:', itemsString);
+    formData.append('items', encodeURIComponent(itemsString));
+    formData.append('total', cart.total.toString());
+    const urlEncodedData = new URLSearchParams(formData).toString();
+    console.log('Отправляемые данные:', urlEncodedData);
 
-            fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: urlEncodedData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error('Network response was not ok');
-            })
-            .then(text => {
-                if (text === 'Success') {
-                    alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
-                    cart.items = [];
-                    cart.updateCart();
-                    document.querySelector('.cart-dropdown').classList.remove('active');
-                } else {
-                    throw new Error('Ответ сервера: ' + text);
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
-            });
-        });
+    fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: urlEncodedData,
+        redirect: 'follow' // Автоматически следовать за перенаправлениями
+    })
+    .then(response => {
+        console.log('HTTP-статус:', response.status);
+        console.log('Заголовки ответа:', Object.fromEntries(response.headers.entries()));
+        if (response.ok) {
+            return response.text();
+        }
+        return response.text().then(text => { throw new Error(`Network response was not ok: ${response.status} - ${text}`); });
+    })
+    .then(text => {
+        console.log('Текст ответа:', text);
+        if (text === 'Success') {
+            alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
+            cart.items = [];
+            cart.updateCart();
+            document.querySelector('.cart-dropdown').classList.remove('active');
+        } else {
+            throw new Error('Ответ сервера: ' + text);
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
+    });
+});
 
         // Accordion functionality
         document.querySelectorAll('.accordion-header').forEach(header => {
