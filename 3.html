@@ -1991,12 +1991,18 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
     };
     console.log('Отправляемый заказ:', JSON.stringify(order)); // Отладка
     
+    // Преобразуем данные в URL-encoded формат
+    const formData = new FormData();
+    formData.append('items', JSON.stringify(cart.items)); // Отправляем items как строку JSON
+    formData.append('total', cart.total.toString());
+    const urlEncodedData = new URLSearchParams(formData).toString();
+
     fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
         method: 'POST',
-        body: JSON.stringify(order),
-        headers: { 'Content-Type': 'application/json' },
-        mode: 'cors', // Явно указываем режим CORS
-        credentials: 'omit' // Не отправляем куки
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: urlEncodedData
     })
     .then(response => {
         console.log('HTTP-статус:', response.status); // Отладка
@@ -2017,6 +2023,11 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
             throw new Error('Ответ сервера: ' + text);
         }
     })
+    .catch(error => {
+        console.error('Ошибка fetch:', error); // Отладка
+        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
+    });
+});
     .catch(error => {
         console.error('Ошибка fetch:', error); // Отладка
         alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
