@@ -1979,41 +1979,6 @@ document.querySelectorAll('.accordion-header').forEach(header => {
 });
 
 // Cart button functionality
-document.querySelector('.cart-btn').addEventListener('click', () => {
-    document.querySelector('.cart-dropdown').classList.toggle('active');
-});
-
-// Add to cart functionality
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
-        const menuItem = button.closest('.menu-item');
-        const name = menuItem.querySelector('span').textContent;
-        const priceText = menuItem.querySelector('.price').textContent;
-        const price = parseInt(priceText.match(/\d+/)[0]); // Извлекаем первую цену
-        const quantity = parseInt(menuItem.querySelector('.quantity-input').value);
-        
-        if (quantity > 0) {
-            cart.addItem({ name, price, quantity });
-            menuItem.querySelector('.quantity-input').value = 0;
-        }
-    });
-});
-
-// Quantity controls
-document.querySelectorAll('.quantity-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const input = button.parentElement.querySelector('.quantity-input');
-        const currentValue = parseInt(input.value);
-        
-        if (button.classList.contains('minus')) {
-            input.value = Math.max(0, currentValue - 1);
-        } else {
-            input.value = currentValue + 1;
-        }
-    });
-});
-
-// Checkout functionality
 document.querySelector('.checkout-btn').addEventListener('click', () => {
     if (cart.items.length === 0) {
         alert('Корзина пуста');
@@ -2029,10 +1994,13 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
     fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
         method: 'POST',
         body: JSON.stringify(order),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors', // Явно указываем режим CORS
+        credentials: 'omit' // Не отправляем куки
     })
     .then(response => {
         console.log('HTTP-статус:', response.status); // Отладка
+        console.log('Ответ:', response); // Отладка
         if (response.ok) {
             return response.text(); // Получаем текст ответа
         } else {
@@ -2040,6 +2008,7 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
         }
     })
     .then(text => {
+        console.log('Текст ответа:', text); // Отладка
         if (text === 'Success') {
             alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
             cart.items = [];
@@ -2048,6 +2017,11 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
             throw new Error('Ответ сервера: ' + text);
         }
     })
+    .catch(error => {
+        console.error('Ошибка fetch:', error); // Отладка
+        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
+    });
+});
     .catch(error => {
         console.error('Ошибка:', error);
         alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
