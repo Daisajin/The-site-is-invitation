@@ -2024,6 +2024,7 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
         items: cart.items,
         total: cart.total
     };
+    console.log('Отправляемый заказ:', JSON.stringify(order)); // Отладка
     
     fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
         method: 'POST',
@@ -2031,17 +2032,25 @@ document.querySelector('.checkout-btn').addEventListener('click', () => {
         headers: { 'Content-Type': 'application/json' }
     })
     .then(response => {
+        console.log('HTTP-статус:', response.status); // Отладка
         if (response.ok) {
+            return response.text(); // Получаем текст ответа
+        } else {
+            return response.text().then(text => { throw new Error('Ошибка сервера: ' + text); });
+        }
+    })
+    .then(text => {
+        if (text === 'Success') {
             alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
             cart.items = [];
             cart.updateCart();
         } else {
-            throw new Error('Ошибка отправки');
+            throw new Error('Ответ сервера: ' + text);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Произошла ошибка. Попробуйте позже.');
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
     });
 });
 
