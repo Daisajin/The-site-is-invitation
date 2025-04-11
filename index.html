@@ -447,42 +447,65 @@
 </main>
 
 <script>
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
+form.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('main section');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const form = document.getElementById('rsvpForm');
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec';
 
-    // Валидация телефона
-    const phone = form.querySelector('input[type="tel"]').value;
-    const cleanedPhone = phone.replace(/\D/g, '');
-    if (!cleanedPhone.match(/[0-9]{10,}/)) {
-        alert('Пожалуйста, введите корректный номер телефона (не менее 10 цифр).');
-        return;
-    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = Array.from(sections).indexOf(entry.target);
+                navDots.forEach(dot => dot.classList.remove('active'));
+                navDots[index].classList.add('active');
+            }
+        });
+    }, { threshold: 0.6 });
 
-    // Преобразуем FormData в URL-encoded строку
-    const urlEncodedData = new URLSearchParams(formData).toString();
-    console.log('Отправляемые данные:', urlEncodedData); // Отладочный вывод
+    sections.forEach(section => observer.observe(section));
 
-    fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: urlEncodedData
-    })
-    .then(response => response.text()) // Получаем текст ответа
-    .then(text => {
-        console.log('Ответ сервера:', text); // Отладочный вывод
-        if (text === 'Success') {
-            alert('Спасибо! Ваше присутствие подтверждено.');
-            form.reset();
-        } else {
-            throw new Error(text);
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        // Валидация телефона
+        const phone = form.querySelector('input[type="tel"]').value;
+        // Удаляем все нецифровые символы из номера телефона
+        const cleanedPhone = phone.replace(/\D/g, '');
+        if (!cleanedPhone.match(/[0-9]{10,}/)) {
+            alert('Пожалуйста, введите корректный номер телефона (не менее 10 цифр).');
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+
+        // Преобразуем FormData в URL-encoded строку
+        const urlEncodedData = new URLSearchParams(formData).toString();
+
+        fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: urlEncodedData
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Спасибо! Ваше присутствие подтверждено.');
+                form.reset();
+            } else {
+                throw new Error('Ошибка отправки');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+        });
     });
 });
 </script>
