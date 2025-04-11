@@ -34,7 +34,8 @@
         }
         
         .section {
-            padding: 4rem 1rem;
+            min-height: 100vh;
+            padding: 4rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -67,16 +68,14 @@
         .menu-category {
             background: rgba(255, 255, 255, 0.7);
             border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
         .menu-item {
             border-bottom: 1px dashed #d9c7b8;
             padding: 0.8rem 0;
-            width: 100%;
-            box-sizing: border-box;
         }
         
         .menu-item:last-child {
@@ -112,7 +111,7 @@
         
         .nav-dots {
             position: fixed;
-            right: 1rem;
+            right: 1.5rem;
             top: 50%;
             transform: translateY(-50%);
             z-index: 100;
@@ -136,7 +135,6 @@
         /* Accordion styles */
         .accordion {
             margin-bottom: 1rem;
-            width: 100%;
         }
         
         .accordion-header {
@@ -173,7 +171,7 @@
         }
         
         .accordion.active .accordion-content {
-            max-height: 2000px; /* Увеличено для длинных списков */
+            max-height: 1000px;
         }
         
         .accordion-icon {
@@ -192,7 +190,6 @@
             margin-top: 1rem;
             padding-top: 1rem;
             border-top: 1px dashed #d9c7b8;
-            flex-wrap: wrap;
         }
         
         .quantity-selector {
@@ -238,11 +235,11 @@
             background: #7a4f4a;
         }
         
-        /* Cart styles */
+        /* Schnauzer cart styles */
         .cart-container {
             position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
+            bottom: 2rem;
+            right: 2rem;
             z-index: 100;
         }
         
@@ -279,9 +276,7 @@
             position: absolute;
             bottom: 70px;
             right: 0;
-            width: 280px;
-            max-height: 70vh;
-            overflow-y: auto;
+            width: 300px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -299,7 +294,6 @@
             justify-content: space-between;
             padding: 0.5rem 0;
             border-bottom: 1px solid #f0f0f0;
-            font-size: 0.9rem;
         }
         
         .cart-total {
@@ -325,182 +319,6 @@
         .schnauzer-icon {
             font-size: 24px;
         }
-
-        /* Адаптация для мобильных устройств */
-        @media (max-width: 768px) {
-            .section {
-                padding: 2rem 0.5rem;
-            }
-            
-            .max-w-4xl {
-                max-width: 100%;
-                width: 100%;
-                margin: 0;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .accordion-header h3 {
-                font-size: 1rem;
-            }
-            
-            .menu-item {
-                padding: 0.5rem 0;
-            }
-            
-            .description {
-                font-size: 0.8em;
-            }
-            
-            .price {
-                font-size: 0.9rem;
-            }
-            
-            .order-controls {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            
-            .quantity-btn {
-                width: 25px;
-                height: 25px;
-                font-size: 0.9rem;
-            }
-            
-            .quantity-input {
-                width: 35px;
-                margin: 0 0.3rem;
-            }
-            
-            .add-to-cart {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            .cart-container {
-                bottom: 1rem;
-                right: 1rem;
-            }
-            
-            .cart-btn {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .cart-count {
-                width: 20px;
-                height: 20px;
-                font-size: 0.7rem;
-            }
-            
-            .cart-dropdown {
-                width: 90vw;
-                max-width: 250px;
-                bottom: 60px;
-                padding: 0.8rem;
-            }
-            
-            .nav-dots {
-                right: 0.5rem;
-            }
-            
-            .nav-dot {
-                width: 10px;
-                height: 10px;
-                margin: 0.5rem 0;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .section {
-                padding: 1rem 0.25rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .writing-animation {
-                animation: writing 2s steps(30) 1s 1 normal both;
-            }
-            
-            .accordion-header {
-                padding: 0.8rem;
-            }
-            
-            .accordion-header h3 {
-                font-size: 0.9rem;
-            }
-            
-            .menu-item {
-                padding: 0.4rem 0;
-            }
-            
-            .description {
-                font-size: 0.7em;
-            }
-            
-            .price {
-                font-size: 0.8rem;
-            }
-            
-            .order-controls {
-                gap: 0.3rem;
-            }
-            
-            .quantity-btn {
-                width: 20px;
-                height: 20px;
-                font-size: 0.8rem;
-            }
-            
-            .quantity-input {
-                width: 30px;
-            }
-            
-            .add-to-cart {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.8rem;
-            }
-            
-            .cart-btn {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .cart-count {
-                width: 18px;
-                height: 18px;
-                font-size: 0.6rem;
-            }
-            
-            .cart-dropdown {
-                width: 85vw;
-                max-width: 200px;
-                bottom: 50px;
-                padding: 0.5rem;
-            }
-            
-            .cart-item {
-                font-size: 0.8rem;
-            }
-            
-            .cart-total {
-                font-size: 0.9rem;
-            }
-            
-            .checkout-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            .floating-icon {
-                font-size: 2rem;
-            }
-        }
     </style>
 </head>
 <body>
@@ -515,7 +333,7 @@
                     <i class="fas fa-utensils"></i>
                 </div>
                 <h1 class="text-4xl md:text-5xl font-bold">
-                    <span class="writing-animation">Меню ресторана "Новая Высота 4509"</span>
+                    <span class="writing-animation">Меню ресторана "Высота"</span>
                 </h1>
                 <div class="floral-divider">
                     <i class="fas fa-leaf mx-2"></i>
@@ -1926,125 +1744,137 @@
         </div>
     </section>
 
-<script>
-// Cart functionality
-const cart = {
-    items: [],
-    total: 0,
-    
-    addItem(item) {
-        const existingItem = this.items.find(i => i.name === item.name);
-        if (existingItem) {
-            existingItem.quantity += item.quantity;
-        } else {
-            this.items.push(item);
-        }
-        this.updateCart();
-    },
-    
-    removeItem(itemName) {
-        this.items = this.items.filter(item => item.name !== itemName);
-        this.updateCart();
-    },
-    
-    updateCart() {
-        this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        this.updateCartUI();
-    },
-    
-    updateCartUI() {
-        const cartItems = document.querySelector('.cart-items');
-        const cartTotal = document.querySelector('.cart-total');
-        const cartCount = document.querySelector('.cart-count');
-        
-        cartItems.innerHTML = this.items.map(item => `
-            <div class="cart-item">
-                <span>${item.name} x${item.quantity}</span>
-                <span>${item.price * item.quantity} ₽</span>
-                <button onclick="cart.removeItem('${item.name}')" class="remove-item">×</button>
-            </div>
-        `).join('');
-        
-        cartTotal.textContent = `Итого: ${this.total} ₽`;
-        cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
-    }
-};
+    <script>
+        // Cart functionality
+        const cart = {
+            items: [],
+            total: 0,
+            
+            addItem(item) {
+                const existingItem = this.items.find(i => i.name === item.name);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                } else {
+                    this.items.push(item);
+                }
+                this.updateCart();
+            },
+            
+            removeItem(itemName) {
+                this.items = this.items.filter(item => item.name !== itemName);
+                this.updateCart();
+            },
+            
+            updateCart() {
+                this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                this.updateCartUI();
+            },
+            
+            updateCartUI() {
+                const cartItems = document.querySelector('.cart-items');
+                const cartTotal = document.querySelector('.cart-total');
+                const cartCount = document.querySelector('.cart-count');
+                
+                cartItems.innerHTML = this.items.map(item => `
+                    <div class="cart-item">
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>${item.price * item.quantity} ₽</span>
+                        <button onclick="cart.removeItem('${item.name}')" class="remove-item">×</button>
+                    </div>
+                `).join('');
+                
+                cartTotal.textContent = `Итого: ${this.total} ₽`;
+                cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        };
 
-// Accordion functionality
-document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const accordion = header.parentElement;
-        accordion.classList.toggle('active');
-    });
-});
+        // Add to cart functionality
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', () => {
+                const menuItem = button.closest('.menu-item');
+                const name = menuItem.querySelector('span').textContent;
+                const price = parseInt(menuItem.querySelector('.price').textContent);
+                const quantity = parseInt(menuItem.querySelector('.quantity-input').value);
+                
+                if (quantity > 0) {
+                    cart.addItem({ name, price, quantity });
+                    menuItem.querySelector('.quantity-input').value = 0;
+                }
+            });
+        });
 
-// Cart button functionality
-document.querySelector('.checkout-btn').addEventListener('click', () => {
-    if (cart.items.length === 0) {
-        alert('Корзина пуста');
-        return;
-    }
-    
-    const order = {
-        items: cart.items,
-        total: cart.total
-    };
-    console.log('Отправляемый заказ:', JSON.stringify(order)); // Отладка
-    
-    // Преобразуем данные в URL-encoded формат
-    const formData = new FormData();
-    formData.append('items', JSON.stringify(cart.items)); // Отправляем items как строку JSON
-    formData.append('total', cart.total.toString());
-    const urlEncodedData = new URLSearchParams(formData).toString();
+        // Quantity controls
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const input = button.parentElement.querySelector('.quantity-input');
+                const currentValue = parseInt(input.value) || 0;
+                
+                if (button.classList.contains('minus')) {
+                    input.value = Math.max(0, currentValue - 1);
+                } else {
+                    input.value = currentValue + 1;
+                }
+            });
+        });
 
-    fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: urlEncodedData
-    })
-    .then(response => {
-        console.log('HTTP-статус:', response.status); // Отладка
-        console.log('Ответ:', response); // Отладка
-        if (response.ok) {
-            return response.text(); // Получаем текст ответа
-        } else {
-            return response.text().then(text => { throw new Error('Ошибка сервера: ' + text); });
-        }
-    })
-    .then(text => {
-        console.log('Текст ответа:', text); // Отладка
-        if (text === 'Success') {
-            alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
-            cart.items = [];
-            cart.updateCart();
-        } else {
-            throw new Error('Ответ сервера: ' + text);
-        }
-    })
-    .catch(error => {
-        console.error('Ошибка fetch:', error); // Отладка
-        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
-    });
-});
-    .catch(error => {
-        console.error('Ошибка fetch:', error); // Отладка
-        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
-    });
-});
-    .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
-    });
-});
+        // Cart button functionality
+        document.querySelector('.cart-btn').addEventListener('click', () => {
+            document.querySelector('.cart-dropdown').classList.toggle('active');
+        });
 
-// Close cart dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.cart-container')) {
-        document.querySelector('.cart-dropdown').classList.remove('active');
-    }
-});
-</script>
+        // Checkout functionality
+        document.querySelector('.checkout-btn').addEventListener('click', () => {
+            if (cart.items.length === 0) {
+                alert('Корзина пуста');
+                return;
+            }
+            
+            const order = {
+                items: cart.items,
+                total: cart.total
+            };
+            
+            const formData = new FormData();
+            formData.append('items', JSON.stringify(cart.items));
+            formData.append('total', cart.total.toString());
+            const urlEncodedData = new URLSearchParams(formData).toString();
+
+            fetch('https://script.google.com/macros/s/AKfycbyh6nGiWTeI_Ip9Tr2nLGkx2slhaXbWLzto7XHlKaI44LRGH6wdFSVbmsZLiB-3xQX-Ow/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlEncodedData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(text => {
+                if (text === 'Success') {
+                    alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
+                    cart.items = [];
+                    cart.updateCart();
+                    document.querySelector('.cart-dropdown').classList.remove('active');
+                } else {
+                    throw new Error('Ответ сервера: ' + text);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка: ' + error.message + '. Попробуйте позже.');
+            });
+        });
+
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const accordion = header.parentElement;
+                accordion.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>
