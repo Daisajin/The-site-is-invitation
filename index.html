@@ -431,74 +431,76 @@
             </div>
         </section>
 
-        <!-- Подтверждение (без email) -->
-        <section id="section5">
-            <div class="section-content">
-                <h2 class="text-3xl mb-6">Подтверждение присутствия</h2>
-                <form class="rsvp-form" id="rsvpForm" novalidate>
-                    <input type="text" placeholder="Ваше имя" required aria-label="Ваше имя">
-                    <input type="tel" placeholder="Телефон" required pattern="[0-9]{10,}" aria-label="Ваш номер телефона">
-                    <textarea placeholder="Ваши пожелания или комментарии" rows="4" aria-label="Ваши пожелания или комментарии"></textarea>
-                    <button type="submit">Подтвердить присутствие</button>
-                </form>
-            </div>
-        </section>
-    </main>
+       <!-- Подтверждение (без email) -->
+<section id="section5">
+    <div class="section-content">
+        <h2 class="text-3xl mb-6">Подтверждение присутствия</h2>
+        <form class="rsvp-form" id="rsvpForm" novalidate>
+            <input type="text" name="name" placeholder="Ваше имя" required aria-label="Ваше имя">
+            <input type="tel" name="phone" placeholder="Телефон" required pattern="[0-9]{10,}" aria-label="Ваш номер телефона">
+            <textarea name="comments" placeholder="Ваши пожелания или комментарии" rows="4" aria-label="Ваши пожелания или комментарии"></textarea>
+            <button type="submit">Подтвердить присутствие</button>
+        </form>
+    </div>
+</section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('main section');
-            const navDots = document.querySelectorAll('.nav-dot');
-            const form = document.getElementById('rsvpForm');
-            const API_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+</main>
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const index = Array.from(sections).indexOf(entry.target);
-                        navDots.forEach(dot => dot.classList.remove('active'));
-                        navDots[index].classList.add('active');
-                    }
-                });
-            }, { threshold: 0.6 });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('main section');
+    const navDots = document.querySelectorAll('.nav-dot');
+    const form = document.getElementById('rsvpForm');
+    const API_URL = 'https://script.google.com/macros/s/YOUR_RSVP_URL/exec'; // Замените YOUR_RSVP_URL
 
-            sections.forEach(section => observer.observe(section));
-
-            navDots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    sections[index].scrollIntoView({ behavior: 'smooth' });
-                });
-            });
-
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-
-                // Валидация только телефона
-                const phone = form.querySelector('input[type="tel"]').value;
-                if (!phone.match(/[0-9]{10,}/)) {
-                    alert('Пожалуйста, введите корректный номер телефона.');
-                    return;
-                }
-
-                fetch(API_URL, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Спасибо! Ваше присутствие подтверждено.');
-                        form.reset();
-                    } else {
-                        throw new Error('Ошибка отправки');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
-                });
-            });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = Array.from(sections).indexOf(entry.target);
+                navDots.forEach(dot => dot.classList.remove('active'));
+                navDots[index].classList.add('active');
+            }
         });
-    </script>
+    }, { threshold: 0.6 });
+
+    sections.forEach(section => observer.observe(section));
+
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            sections[index].scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        // Валидация телефона
+        const phone = form.querySelector('input[type="tel"]').value;
+        if (!phone.match(/[0-9]{10,}/)) {
+            alert('Пожалуйста, введите корректный номер телефона.');
+            return;
+        }
+
+        fetch(API_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Спасибо! Ваше присутствие подтверждено.');
+                form.reset();
+            } else {
+                throw new Error('Ошибка отправки');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+        });
+    });
+});
+</script>
+
 </body>
 </html>
