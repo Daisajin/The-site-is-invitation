@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
     const navDots = document.querySelectorAll('.nav-dot');
     const form = document.getElementById('rsvpForm');
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyqciNh46TSh96h0G3ytbR0r1uCyBx3VIpyw2jaFIuquDvk4sQEG9-D189ao4mkrMi9mw/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbydsaRfRuSwuy2dpI5geraj2Pqi_GD1rq64ha5yZvPLfC7-G9K0vDkp-fyLSAZuwk5uyw/exec';
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -477,8 +477,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Валидация телефона
         const phone = form.querySelector('input[type="tel"]').value;
-        if (!phone.match(/[0-9]{10,}/)) {
-            alert('Пожалуйста, введите корректный номер телефона.');
+        // Удаляем все нецифровые символы из номера телефона
+        const cleanedPhone = phone.replace(/\D/g, '');
+        if (!cleanedPhone.match(/[0-9]{10,}/)) {
+            alert('Пожалуйста, введите корректный номер телефона (не менее 10 цифр).');
             return;
         }
 
