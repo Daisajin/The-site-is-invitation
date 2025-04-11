@@ -447,7 +447,7 @@
 </main>
 
 <script>
-form.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('main section');
     const navDots = document.querySelectorAll('.nav-dot');
     const form = document.getElementById('rsvpForm');
@@ -477,7 +477,6 @@ form.addEventListener('DOMContentLoaded', () => {
 
         // Валидация телефона
         const phone = form.querySelector('input[type="tel"]').value;
-        // Удаляем все нецифровые символы из номера телефона
         const cleanedPhone = phone.replace(/\D/g, '');
         if (!cleanedPhone.match(/[0-9]{10,}/)) {
             alert('Пожалуйста, введите корректный номер телефона (не менее 10 цифр).');
@@ -494,17 +493,19 @@ form.addEventListener('DOMContentLoaded', () => {
             },
             body: urlEncodedData
         })
-        .then(response => {
-            if (response.ok) {
+        .then(response => response.text()) // Получаем текст ответа
+        .then(text => {
+            console.log('Ответ сервера:', text); // Для отладки
+            if (text === 'Success') {
                 alert('Спасибо! Ваше присутствие подтверждено.');
                 form.reset();
             } else {
-                throw new Error('Ошибка отправки');
+                throw new Error(text || 'Ошибка отправки');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Произошла ошибка. Пожалуйста, попробуйте позже.');
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка: ' + error.message + '. Пожалуйста, попробуйте позже.');
         });
     });
 });
