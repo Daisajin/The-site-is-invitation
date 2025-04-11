@@ -1926,131 +1926,131 @@
         </div>
     </section>
 
- <script>
-    // Cart functionality
-    const cart = {
-        items: [],
-        total: 0,
-        
-        addItem(item) {
-            const existingItem = this.items.find(i => i.name === item.name);
-            if (existingItem) {
-                existingItem.quantity += item.quantity;
-            } else {
-                this.items.push(item);
-            }
-            this.updateCart();
-        },
-        
-        removeItem(itemName) {
-            this.items = this.items.filter(item => item.name !== itemName);
-            this.updateCart();
-        },
-        
-        updateCart() {
-            this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            this.updateCartUI();
-        },
-        
-        updateCartUI() {
-            const cartItems = document.querySelector('.cart-items');
-            const cartTotal = document.querySelector('.cart-total');
-            const cartCount = document.querySelector('.cart-count');
-            
-            cartItems.innerHTML = this.items.map(item => `
-                <div class="cart-item">
-                    <span>${item.name} x${item.quantity}</span>
-                    <span>${item.price * item.quantity} ₽</span>
-                    <button onclick="cart.removeItem('${item.name}')" class="remove-item">×</button>
-                </div>
-            `).join('');
-            
-            cartTotal.textContent = `Итого: ${this.total} ₽`;
-            cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
+<script>
+// Cart functionality
+const cart = {
+    items: [],
+    total: 0,
+    
+    addItem(item) {
+        const existingItem = this.items.find(i => i.name === item.name);
+        if (existingItem) {
+            existingItem.quantity += item.quantity;
+        } else {
+            this.items.push(item);
         }
+        this.updateCart();
+    },
+    
+    removeItem(itemName) {
+        this.items = this.items.filter(item => item.name !== itemName);
+        this.updateCart();
+    },
+    
+    updateCart() {
+        this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        this.updateCartUI();
+    },
+    
+    updateCartUI() {
+        const cartItems = document.querySelector('.cart-items');
+        const cartTotal = document.querySelector('.cart-total');
+        const cartCount = document.querySelector('.cart-count');
+        
+        cartItems.innerHTML = this.items.map(item => `
+            <div class="cart-item">
+                <span>${item.name} x${item.quantity}</span>
+                <span>${item.price * item.quantity} ₽</span>
+                <button onclick="cart.removeItem('${item.name}')" class="remove-item">×</button>
+            </div>
+        `).join('');
+        
+        cartTotal.textContent = `Итого: ${this.total} ₽`;
+        cartCount.textContent = this.items.reduce((sum, item) => sum + item.quantity, 0);
+    }
+};
+
+// Accordion functionality
+document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+        const accordion = header.parentElement;
+        accordion.classList.toggle('active');
+    });
+});
+
+// Cart button functionality
+document.querySelector('.cart-btn').addEventListener('click', () => {
+    document.querySelector('.cart-dropdown').classList.toggle('active');
+});
+
+// Add to cart functionality
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        const menuItem = button.closest('.menu-item');
+        const name = menuItem.querySelector('span').textContent;
+        const priceText = menuItem.querySelector('.price').textContent;
+        const price = parseInt(priceText.match(/\d+/)[0]); // Извлекаем первую цену
+        const quantity = parseInt(menuItem.querySelector('.quantity-input').value);
+        
+        if (quantity > 0) {
+            cart.addItem({ name, price, quantity });
+            menuItem.querySelector('.quantity-input').value = 0;
+        }
+    });
+});
+
+// Quantity controls
+document.querySelectorAll('.quantity-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const input = button.parentElement.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        
+        if (button.classList.contains('minus')) {
+            input.value = Math.max(0, currentValue - 1);
+        } else {
+            input.value = currentValue + 1;
+        }
+    });
+});
+
+// Checkout functionality
+document.querySelector('.checkout-btn').addEventListener('click', () => {
+    if (cart.items.length === 0) {
+        alert('Корзина пуста');
+        return;
+    }
+    
+    const order = {
+        items: cart.items,
+        total: cart.total
     };
-
-    // Accordion functionality
-    document.querySelectorAll('.accordion-header').forEach(header => {
-        header.addEventListener('click', () => {
-            const accordion = header.parentElement;
-            accordion.classList.toggle('active');
-        });
-    });
-
-    // Cart button functionality
-    document.querySelector('.cart-btn').addEventListener('click', () => {
-        document.querySelector('.cart-dropdown').classList.toggle('active');
-    });
-
-    // Add to cart functionality
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', () => {
-            const menuItem = button.closest('.menu-item');
-            const name = menuItem.querySelector('span').textContent;
-            const priceText = menuItem.querySelector('.price').textContent;
-            const price = parseInt(priceText.match(/\d+/)[0]); // Извлекаем первую цену
-            const quantity = parseInt(menuItem.querySelector('.quantity-input').value);
-            
-            if (quantity > 0) {
-                cart.addItem({ name, price, quantity });
-                menuItem.querySelector('.quantity-input').value = 0;
-            }
-        });
-    });
-
-    // Quantity controls
-    document.querySelectorAll('.quantity-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const input = button.parentElement.querySelector('.quantity-input');
-            const currentValue = parseInt(input.value);
-            
-            if (button.classList.contains('minus')) {
-                input.value = Math.max(0, currentValue - 1);
-            } else {
-                input.value = currentValue + 1;
-            }
-        });
-    });
-
-    // Checkout functionality
-    document.querySelector('.checkout-btn').addEventListener('click', () => {
-        if (cart.items.length === 0) {
-            alert('Корзина пуста');
-            return;
+    
+    fetch('https://script.google.com/macros/s/AKfycbydsaRfRuSwuy2dpI5geraj2Pqi_GD1rq64ha5yZvPLfC7-G9K0vDkp-fyLSAZuwk5uyw/exec', {
+        method: 'POST',
+        body: JSON.stringify(order),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
+            cart.items = [];
+            cart.updateCart();
+        } else {
+            throw new Error('Ошибка отправки');
         }
-        
-        const order = {
-            items: cart.items,
-            total: cart.total
-        };
-        
-        fetch('https://script.google.com/macros/s/YOUR_ORDERS_URL/exec', { // Замените YOUR_ORDERS_URL
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: { 'Content-Type': 'application/json' }
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Заказ оформлен! Сумма: ' + cart.total + ' ₽');
-                cart.items = [];
-                cart.updateCart();
-            } else {
-                throw new Error('Ошибка отправки');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Произошла ошибка. Попробуйте позже.');
-        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка. Попробуйте позже.');
     });
+});
 
-    // Close cart dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.cart-container')) {
-            document.querySelector('.cart-dropdown').classList.remove('active');
-        }
-    });
+// Close cart dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.cart-container')) {
+        document.querySelector('.cart-dropdown').classList.remove('active');
+    }
+});
 </script>
 </body>
 </html>
